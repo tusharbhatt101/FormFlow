@@ -20,7 +20,6 @@ import { useState } from "react";
 import "./App.css";
 import FormInput from "./Components/FormInput";
 
-
 const App = () => {
   const [values, setValues] = useState({
     name: "",
@@ -28,6 +27,15 @@ const App = () => {
     contact: "",
     category: "",
   });
+
+  const categories = [
+    "Retailer",
+    "Wholesaler",
+    "Distributor",
+    "Caterer",
+    "Restaurant or cafe owner",
+    "Others please specify",
+  ];
 
   const inputs = [
     {
@@ -63,11 +71,11 @@ const App = () => {
     {
       id: 4,
       name: "category",
-      type: "text",
+      type: "dropdown",
       placeholder: "Category",
       errorMessage: "It should allow only characters",
       label: "Category",
-      pattern: "^[a-zA-Z ]+$",
+      options: categories,
       required: true,
     },
     // {
