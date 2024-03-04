@@ -2,13 +2,15 @@ import { useState } from "react";
 import "./formInput.css";
 
 const FormInput = (props) => {
+ 
   const [focused, setFocused] = useState(false);
+ 
   const { label, errorMessage, onChange, options, type, id, ...inputProps } = props;
 
   const handleFocus = (e) => {
     setFocused(true);
   };
-
+// console.log(value,"value")
   return (
     <div className="formInput">
       <label>{label}</label>
@@ -16,10 +18,12 @@ const FormInput = (props) => {
         <select
           {...inputProps}
           value={inputProps.value}
-          onChange={(e) =>
+          onChange={(e) =>{
             onChange({
               target: { name: inputProps.name, value: e.target.value },
             })
+           props.setOption(e.target.value)
+          }
           }
           onBlur={handleFocus}
           onFocus={handleFocus}

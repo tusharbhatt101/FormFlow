@@ -21,6 +21,8 @@ import "./App.css";
 import FormInput from "./Components/FormInput";
 
 const App = () => {
+  const [option,setOption]=useState(null)
+  const [buttonLoader,setButtonLoader]=useState(false)
   const [values, setValues] = useState({
     name: "",
     email: "",
@@ -78,17 +80,17 @@ const App = () => {
       options: categories,
       required: true,
     },
-    // {
-    //   id: 4,
-    //   name: "password",
-    //   type: "password",
-    //   placeholder: "Password",
-    //   errorMessage:
-    //     "Password should be 8-20 characters and include at least 1 letter, 1 number and 1 special character!",
-    //   label: "Password",
-    //   pattern: `^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$`,
-    //   required: true,
-    // },
+    {
+      id: 5,
+      name: "other",
+      type: "text",
+      placeholder: "Other category",
+      errorMessage:
+        "It should not be empty",
+      label: "",
+     
+      required: true,
+    },
     // {
     //   id: 5,
     //   name: "confirmPassword",
@@ -102,6 +104,7 @@ const App = () => {
   ];
 
   const handleSubmit = (e) => {
+    setButtonLoader(true)
     e.preventDefault();
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
@@ -110,7 +113,7 @@ const App = () => {
       name: values.name,
       email: values.email,
       phoneNumber: values.contact,
-      category: values.category,
+      category: option== "Others please specify"?values.other : values.category,
     });
 
     var requestOptions = {
@@ -124,33 +127,40 @@ const App = () => {
       .then((response) => response.json())
       .then((result) => {
         if (result.responseCode == 201)
+        setButtonLoader(false)
           // if (window.confirm("Your records has been saved")) {
           //   document.location = "http://stackoverflow.com/";
           // }
-          alert("Your records has been saved");
+          // alert("Your records has been saved");
         window.location = "https://paramupyog.com/pages/copy-of-catalogue";
       })
-      .catch((error) => console.log("error", error));
+      .catch((error) => {
+        setButtonLoader(false)
+        console.log("error", error)});
   };
 
   const onChange = (e) => {
     const { name, value } = e.target;
     setValues({ ...values, [name]: value });
   };
-
+console.log(values,"values")
   return (
     <div className="app">
       <form onSubmit={handleSubmit}>
         <h1>Enter your Details!!</h1>
-        {inputs.map((input) => (
+        {(option== "Others please specify"?inputs:inputs.slice(0,-1)).map((input) => (
           <FormInput
             key={input.id}
+            setOption={setOption}
             {...input}
             value={values[input.name]}
             onChange={onChange}
           />
         ))}
-        <button type="submit">Submit</button>
+        <button className="animated-button" type="submit">
+       
+{buttonLoader && <span className="loading loading--full-height"></span>}
+          Submit</button>
       </form>
     </div>
   );
